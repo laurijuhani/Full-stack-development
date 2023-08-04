@@ -68,4 +68,10 @@ blogsRouter.put('/:id', async (request, response) => {
 })
 
 
+blogsRouter.get('/all', async (request, response) => {
+  await Blog.deleteMany({})
+})
+
+// poista tää ennen kun palautat
+
 module.exports = blogsRouter
