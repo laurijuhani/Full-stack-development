@@ -108,6 +108,7 @@ const typeDefs = `
   
   type Author {
     name: String!
+    born: Int
     bookCount: Int!
   }
 
@@ -118,13 +119,14 @@ const typeDefs = `
     allAuthors: [Author!]!
   }
 
+ 
   type Mutation {
     addBook(
       title: String!
       author: String!
       published: Int!
       genres: [String!]!
-    ): {title: String!, author: String!})
+    ): Book
     editAuthor(
     name: String!
     setBornTo: Int!
@@ -156,6 +158,7 @@ const resolvers = {
         const bookCount = books.filter(book => book.author === author.name).length
         return {
           name: author.name,
+          born: author.born,
           bookCount
         }
       })
