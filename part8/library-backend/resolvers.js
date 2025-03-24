@@ -1,101 +1,14 @@
-import { ApolloServer } from '@apollo/server'
-import { startStandaloneServer } from '@apollo/server/standalone'
 import { GraphQLError } from 'graphql'
-import mongoose from 'mongoose'
 import jwt from 'jsonwebtoken'
 import Book from './models/book.js'
 import Author from './models/author.js'
 import User from './models/user.js'
 
-import dotenv from 'dotenv'
-dotenv.config()
-
-const MONGODB_URI = process.env.MONGODB_URI
-
-console.log('connecting to', MONGODB_URI)
-
-mongoose.connect(MONGODB_URI)
-  .then(() => {
-    console.log('connected to MongoDB')
-  })
-  .catch((error) => {
-    console.log('error connection to MongoDB:', error.message)
-  })
+import { PubSub } from 'graphql-subscriptions'
+const pubsub = new PubSub()
 
 
-/*
- * Suomi:
- * Saattaisi olla järkevämpää assosioida kirja ja sen tekijä tallettamalla kirjan yhteyteen tekijän nimen sijaan tekijän id
- * Yksinkertaisuuden vuoksi tallennamme kuitenkin kirjan yhteyteen tekijän nimen
- *
- * English:
- * It might make more sense to associate a book with its author by storing the author's id in the context of the book instead of the author's name
- * However, for simplicity, we will store the author's name in connection with the book
- *
- * Spanish:
- * Podría tener más sentido asociar un libro con su autor almacenando la id del autor en el contexto del libro en lugar del nombre del autor
- * Sin embargo, por simplicidad, almacenaremos el nombre del autor en conexión con el libro
-*/
-
-const typeDefs = `
-  type Book {
-    title: String!
-    author: Author!
-    published: Int!
-    genres: [String!]!
-    id: ID!
-  }
-  
-  type Author {
-    name: String!
-    born: Int
-    bookCount: Int!
-  }
-
-  type User {
-    username: String!
-    favoriteGenre: String!
-    id: ID!
-  }
-
-  type Token {
-    value: String!
-  }
-
-
-  type Query {
-    bookCount: Int!
-    authorCount: Int!
-    allBooks(author: String, genre: String): [Book!]!
-    allAuthors: [Author!]!
-    me: User
-  }
-
- 
-  type Mutation {
-    addBook(
-      title: String!
-      author: String!
-      published: Int!
-      genres: [String!]!
-    ): Book
-    editAuthor(
-    name: String!
-    setBornTo: Int!
-    ): Author
-    createUser(
-    username: String!
-    favoriteGenre: String!
-    ): User
-    login(
-      username: String!
-      password: String!
-    ): Token
-  }
-
-`
-
-const resolvers = {
+export const resolvers = {
   Query: {
     bookCount: () => Book.countDocuments(),
     authorCount: () => Author.countDocuments(),
@@ -131,7 +44,7 @@ const resolvers = {
     }
   },
   Mutation: {
-    addBook: async (root, args, context) => {
+    addBook: async (root, args, context) => {      
       const currentUser = context.currentUser
 
       if (!currentUser) {
@@ -173,6 +86,11 @@ const resolvers = {
           }
         })
       }
+
+      const res = await book.populate('author')
+
+      pubsub.publish('BOOK_ADDED', { bookAdded: res })
+
       return book.populate('author')
     },
     editAuthor: async (root, args, context) => {
@@ -239,26 +157,10 @@ const resolvers = {
 
       return { value: jwt.sign(userForToken, process.env.JWT_SECRET) }
     }
+  },
+  Subscription: {
+    bookAdded: {
+      subscribe: () => pubsub.asyncIterableIterator('BOOK_ADDED')
+    }
   }
 }
-
-const server = new ApolloServer({
-  typeDefs,
-  resolvers,
-})
-
-startStandaloneServer(server, {
-  listen: { port: 4000 },
-  context: async ({ req, res }) => {
-    const auth = req ? req.headers.authorization : null
-    if (auth && auth.startsWith('Bearer ')) {
-      const decodedToken = jwt.verify(
-        auth.substring(7), process.env.JWT_SECRET
-      )
-      const currentUser = await User.findById(decodedToken.id)
-      return { currentUser }
-    }
-  },
-}).then(({ url }) => {
-  console.log(`Server ready at ${url}`)
-})

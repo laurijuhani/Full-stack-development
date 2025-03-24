@@ -11,6 +11,7 @@ const Books = (props) => {
 
   useEffect(() => {
     if (result.data) {
+      
       const books = result.data.allBooks
       const fetchedGenres = books.reduce((acc, book) => {
         book.genres.forEach((genre) => {
