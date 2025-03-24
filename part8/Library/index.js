@@ -1,13 +1,14 @@
-const { ApolloServer } = require('@apollo/server')
-const { startStandaloneServer } = require('@apollo/server/standalone')
+import { ApolloServer } from '@apollo/server'
+import { startStandaloneServer } from '@apollo/server/standalone'
 import { GraphQLError } from 'graphql'
-const mongoose = require('mongoose')
-const jwt = require('jsonwebtoken')
-const Author = require('./models/author')
-const Book = require('./models/book')
-const User = require('./models/user')
+import mongoose from 'mongoose'
+import jwt from 'jsonwebtoken'
+import Book from './models/book.js'
+import Author from './models/author.js'
+import User from './models/user.js'
 
-require('dotenv').config()
+import dotenv from 'dotenv'
+dotenv.config()
 
 const MONGODB_URI = process.env.MONGODB_URI
 
@@ -147,6 +148,8 @@ const resolvers = {
         try {
           await author.save()
         } catch (error) {
+          console.log('error1', error);
+          
           throw new GraphQLError('Adding author failed', {
             extensions: {
               code: 'BAD_USER_INPUT',
@@ -160,6 +163,8 @@ const resolvers = {
       try {
         await book.save()
       } catch (error) {
+        console.log('error2', error
+        );
         throw new GraphQLError('Adding book failed', {
           extensions: {
             code: 'BAD_USER_INPUT',
