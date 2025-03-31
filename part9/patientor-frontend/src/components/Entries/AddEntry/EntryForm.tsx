@@ -1,8 +1,9 @@
-import { Button, TextField, MenuItem } from "@mui/material";
+import { Button, TextField, MenuItem, RadioGroup, FormControlLabel, Radio } from "@mui/material";
 import React, { useState } from "react";
 import { Diagnosis, Entry, NewEntry } from "../../../types";
 import patients from "../../../services/patients";
 import { AxiosError } from "axios";
+import MultipleSelect from "./MultipleSelect";
 
 interface EntryFormProps {
   setForm: React.Dispatch<React.SetStateAction<boolean>>;
@@ -35,7 +36,7 @@ const EntryForm = ({ setForm, setEntries, setError, diagnoses }: EntryFormProps)
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError('');
-   
+
     const target = event.target as typeof event.target & {
       description: { value: string };
       date: { value: string };
@@ -78,7 +79,14 @@ const EntryForm = ({ setForm, setEntries, setError, diagnoses }: EntryFormProps)
     
     try {
      const patientId = window.location.pathname.split('/')[2];    
-     const res = await patients.createEntry(patientId, newEntry);    
+     const res = await patients.createEntry(patientId, newEntry); 
+     
+    res.diagnosisCodes = res.diagnosisCodes?.map((code) => {
+      const diagnosis = diagnoses.find((d) => d.code === code);
+      return diagnosis ? `${code} ${diagnosis.name}` : code;
+    });
+
+
      setEntries((prevEntries) => [...prevEntries, res]);
      setForm(false);
    } catch (error) {
@@ -118,6 +126,14 @@ const EntryForm = ({ setForm, setEntries, setError, diagnoses }: EntryFormProps)
             ))}
             </TextField>
         </div>
+
+        <MultipleSelect 
+          selectedDiagnoses={selectedDiagnoses}
+          setSelectedDiagnoses={setSelectedDiagnoses}
+          diagnoses={diagnoses}
+        />
+
+
         <div>
           <TextField
             id="description"
@@ -147,13 +163,20 @@ const EntryForm = ({ setForm, setEntries, setError, diagnoses }: EntryFormProps)
         </div>
 
         {type === 'HealthCheck' && (
-          <div>
-            <TextField
-              id="healthCheckRating"
-              label="Health Check Rating"
-              type="number"
-              variant="standard"
-            />
+          <div style={{marginTop: '1rem'}}>
+            <label style={{color: 'grey'}}>Health Check rating</label>
+            
+            <RadioGroup
+              row
+              name="healthCheckRating"
+            >
+              <FormControlLabel value={0} control={<Radio />} label="Healthy" />
+              <FormControlLabel value={1} control={<Radio />} label="Low Risk" />
+              <FormControlLabel value={2} control={<Radio />} label="High Risk" />
+              <FormControlLabel value={3} control={<Radio />} label="Critical Risk" />
+            </RadioGroup>
+
+
           </div>
         )}
 
@@ -216,38 +239,7 @@ const EntryForm = ({ setForm, setEntries, setError, diagnoses }: EntryFormProps)
           </>
         )}
 
-        <div style={{ marginBottom: '1rem' }}>
-          <TextField
-            id="diagnosisCodes"
-            label="Diagnosis Codes"
-            value={selectedDiagnoses.join(', ')}
-            onChange={(event) => {
-              const codes = event.target.value.split(',').map((code) => code.trim());
-              setSelectedDiagnoses(codes);
-            }}
-            variant="standard"
-          />
-          <TextField
-            id="diagnosisSelect"
-            label="Add Diagnosis"
-            select
-            variant="standard"
-            onChange={(event) => {
-              const selectedCode = event.target.value;
-              if (!selectedDiagnoses.includes(selectedCode)) {
-                setSelectedDiagnoses((prev) => [...prev, selectedCode]);
-              }
-            }}
-            helperText="Select a diagnosis to add"
-            style={{ marginTop: '1rem' }}
-          >
-            {diagnoses.map((diagnosis) => (
-              <MenuItem key={diagnosis.code} value={diagnosis.code}>
-                {diagnosis.code} - {diagnosis.name}
-              </MenuItem>
-            ))}
-          </TextField>
-        </div>
+        
 
 
 

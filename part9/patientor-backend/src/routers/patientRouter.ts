@@ -42,9 +42,10 @@ router.post('/:id/entries', (req, res) => {
     if (!patient) {
       res.status(404).send({ error: 'Patient not found' });
       return; 
-    }
+    }    
     const newEntry = newEntrySchema.parse(req.body);
-    newEntry.diagnosisCodes =   parseDiagnosisCodes(newEntry.diagnosisCodes);
+    console.log(newEntry.diagnosisCodes);
+    newEntry.diagnosisCodes =   parseDiagnosisCodes(newEntry);
     
     const addedEntry = patientService.addEntry(id, newEntry);
     res.json(addedEntry);
