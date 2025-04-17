@@ -1,0 +1,88 @@
+Script started on 2025-04-16 17:58:08+03:00 [TERM="xterm-256color" TTY="/dev/pts/0" COLUMNS="120" LINES="30"]
+[?2004h]0;lauri@DESKTOP: ~/part12-containers-applications/script-answers[01;32mlauri@DESKTOP[00m:[01;34m~/part12-containers-applications/script-answers[00m$ exitquitdocker exec -it todo-backend-mongo-1 bashcurl http://$(cmd.exe /c hostname):11434/api/tags[A
+]0;lauri@DESKTOP: ~/part12-containers-applications/script-answers[01;32mlauri@DESKTOP[00m:[01;34m~/part12-containers-applications/script-answers[00m$ }' --no-buffer[K
+
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Ccurl http://$(cmd.exe /c hostname):11434/api/tags[A
+]0;lauri@DESKTOP: ~/part12-containers-applications/script-answers[01;32mlauri@DESKTOP[00m:[01;34m~/part12-containers-applications/script-answers[00m$ [2Pdocker exec -it todo-backend-mongo-1 bash
+
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C
+[?2004l
+[?2004hroot@a2344ff0f16b:/# mongosh -u root .p e    -e p example 
+[?2004l
+]0;mongosh mongodb://<credentials>@127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000Current Mongosh Log ID:	67ffc5a17523fffd9fd861df
+Connecting to:		[1m[32mmongodb://<credentials>@127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.5.0[0m
+Using MongoDB:		8.0.8
+[1m[33mUsing Mongosh[0m:		2.5.0
+
+For mongosh info see: https://www.mongodb.com/docs/mongodb-shell/
+
+[1G[0J [1G[?2004h[1m[33m------[0m
+   [1m[33mThe server generated these startup warnings when booting[0m
+   2025-04-16T14:42:00.001+00:00: Using the XFS filesystem is strongly recommended with the WiredTiger storage engine. See http://dochub.mongodb.org/core/prodnotes-filesystem
+   2025-04-16T14:42:00.634+00:00: For customers running the current memory allocator, we suggest changing the contents of the following sysfsFile
+   2025-04-16T14:42:00.634+00:00: We suggest setting the contents of sysfsFile to 0.
+   2025-04-16T14:42:00.634+00:00: vm.max_map_count is too low
+   2025-04-16T14:42:00.634+00:00: We suggest setting swappiness to 0 or 1, as swapping can cause performance problems.
+[1m[33m------[0m
+
+[1G[0Jtest> [7Gshow dbs
+
+[1madmin[0m         100.00 KiB
+[1mconfig[0m        108.00 KiB
+[1mlocal[0m          72.00 KiB
+[1mthe_database[0m   40.00 KiB
+[1G[0Jtest> [7Guse the_database
+
+switched to db the_database
+[1G[0Jthe_database> [15Gshow collections [1G[0Jthe_database> show collections[31G
+
+[1mtodos[0m
+[1G[0Jthe_database> [15Gdb.todos.fins[1G[0Jthe_database> db.todos.fin[27Gd()[1G[0Jthe_database> db.todos.find([29G[][1G[0Jthe_database> db.todos.find([[30G[1G[0Jthe_database> db.todos.find([29G{})
+
+[
+  {
+    _id: ObjectId([32m'67ffc19a91e553dec2d861e0'[39m),
+    text: [32m'Write code'[39m,
+    done: [33mtrue[39m
+  },
+  {
+    _id: ObjectId([32m'67ffc19a91e553dec2d861e1'[39m),
+    text: [32m'Learn about containers'[39m,
+    done: [33mfalse[39m
+  }
+]
+[1G[0Jthe_database> [15Gdb.todos.insertOne({ text[33mtext[39m: [32m"[39m[32mI[39m[32mn[39m[32mc[39m[32mr[39m[32me[39m[32ma[39m[32ms[39m[32me[39m [32mt[39m[32mh[39m[32me[39m [32mn[39m[32mu[39m[32mm[39m[32mb[39m[32me[39m[32mr[39m [32mo[39m[32mf[39m [32mt[39m[32mo[39m[32mo[39m[32ml[39m[32ms[39m [32mi[39m[32mn[39m [32mm[39m[32my[39m[32mt[39m [32mt[39m[32mo[39m[32mo[39m[32ml[39m[32mt[39m [1G[0Jthe_database> db.todos.insertOne({ [33mtext[39m: [32m"Increase the number of tools in myt toolt[39m[84G[1G[0Jthe_database> db.todos.insertOne({ [33mtext[39m: [32m"Increase the number of tools in myt tool[39m[83G[1G[0Jthe_database> db.todos.insertOne({ [33mtext[39m: [32m"Increase the number of tools in myt too[39m[82G[1G[0Jthe_database> db.todos.insertOne({ [33mtext[39m: [32m"Increase the number of tools in myt to[39m[81G[1G[0Jthe_database> db.todos.insertOne({ [33mtext[39m: [32m"Increase the number of tools in myt t[39m[80G[1G[0Jthe_database> db.todos.insertOne({ [33mtext[39m: [32m"Increase the number of tools in myt [39m[79G[1G[0Jthe_database> db.todos.insertOne({ [33mtext[39m: [32m"Increase the number of tools in myt[39m[78G[1G[0Jthe_database> db.todos.insertOne({ [33mtext[39m: [32m"Increase the number of tools in my[39m[77G [32mt[39m[32mo[39m[32mo[39m[32ml[39m [32mb[39m[32me[39m[32ml[39m[32mt[39m [1G[0Jthe_database> db.todos.insertOne({ [33mtext[39m: [32m"Increase the number of tools in my tool belt[39m[87G[32m"[39m, d[36mdo[39mdone: fals[33mfalse[39m })
+
+{
+  acknowledged: [33mtrue[39m,
+  insertedId: ObjectId([32m'67ffc6807523fffd9fd861e0'[39m)
+}
+[1G[0Jthe_database> [15G[1G[0Jthe_database> db.todos.insertOne({ [33mtext[39m: [32m"Increase the number of tools in my tool belt"[39m, [33mdone[39m: [33mfalse[39m })[104G[1G[0Jthe_database> db.todos.find({})[32G
+
+[
+  {
+    _id: ObjectId([32m'67ffc19a91e553dec2d861e0'[39m),
+    text: [32m'Write code'[39m,
+    done: [33mtrue[39m
+  },
+  {
+    _id: ObjectId([32m'67ffc19a91e553dec2d861e1'[39m),
+    text: [32m'Learn about containers'[39m,
+    done: [33mfalse[39m
+  },
+  {
+    _id: ObjectId([32m'67ffc6807523fffd9fd861e0'[39m),
+    text: [32m'Increase the number of tools in my tool belt'[39m,
+    done: [33mfalse[39m
+  }
+]
+[1G[0Jthe_database> [15Gexit
+
+[?2004l[?2004hroot@a2344ff0f16b:/# exit
+[?2004l
+exit
+[?2004h]0;lauri@DESKTOP: ~/part12-containers-applications/script-answers[01;32mlauri@DESKTOP[00m:[01;34m~/part12-containers-applications/script-answers[00m$ exit
+[?2004l
+exit
+
+Script done on 2025-04-16 18:02:52+03:00 [COMMAND_EXIT_CODE="0"]

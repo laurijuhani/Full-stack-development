@@ -1,0 +1,23 @@
+services:
+  app: 
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile 
+    container_name: library-front
+  server:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: library-back
+    environment:
+      MONGODB_URI: ${MONGODB_URI}
+  nginx:
+    image: nginx:1.20.1
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - 8080:80
+    container_name: reverse-proxy
+    depends_on:
+      - app 
+  
